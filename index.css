@@ -1,0 +1,38 @@
+.apib{
+    background-color:#6D9EF1;
+    color:white;
+    font-weight:bold;
+    border:1px solid #808080;
+    border-radius:7;
+    cursor:hand;
+    padding:2;
+    padding-left:10;
+    padding-right:10;
+}
+.panel2{
+    background-color:#f9f9f9;
+    border:1px solid #808080;
+    border-radius:7;
+    padding:10;
+
+}
+.status{
+    font-size:0.8em;
+    color:#7F4B4B;
+}
+.value{
+    background-color:white;
+    margin:5;
+    padding:5;
+    border:1px solid #A52A2A;
+    border-radius:10;
+    font-family:monospace;    
+}
+.location_table{
+    font-size:1em
+}
+
+.pprint_obj{
+    font-size:0.9em; 
+    background-color:rgb(255, 253, 215);
+}
