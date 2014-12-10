@@ -1,447 +1,66 @@
+
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
 <html>
-
     <head>
-
-        <script src='js/jproxy.js' ></script>
-        <link rel="stylesheet" href="./index.css" type="text/css"  />
-
+        <title>Kradac: Rastreo</title>
+        <script src='js/jproxy.js'></script>
         <script>
-
             /***** initialization *****/
             function init() {
-                document.getElementById('jpro_url').innerHTML = jpro.url;
-
                 var appid = 'dobI4H4zeDcAUAjDgtUL_1';//<<< set to the right Application ID
-                document.getElementById('jpro_appid').innerHTML = appid;
                 jpro.init(appid, on_jproReady, on_jproAuth);
-            }
-            /*************************/
 
-
-            /***** user authentication *****/
-            function login(form) {
-                //console.log(form);
-                var inputs = form.getElementsByTagName('input');
-                for (var i in inputs) {
-                    var input = inputs[i];
-                    if (input.name == 'uname')
-                        var login = input.value;
-                    if (input.name == 'pword')
-                        var pass = input.value;
-                    if (input.name == 'storeit') {
-                        var storeit = input.checked;
-                        //console.log("storeit " , storeit)
-                    }
-                }
                 try {
-                    jpro.creds.set(login, pass, storeit);
+                    jpro.creds.set("hugo.ramirez@kradac.com", "kradacloja");
                 } catch (e) {
-                    console.error(e)
+                    console.error(e);
                 }
-                return false;
             }
             function logout() {
                 jpro.creds.logout();
             }
             function on_jproAuth(state, data) {
-                console.log("jproAuth: auth " + state, data);
-                document.getElementById('auth_state').innerHTML = '[' + state + '] ' + data;
-                if (state == 'ok') {
-                    hideLogin();
+                if (state === 'ok') {
+                    reload();
                 }
-                else if (state == 'ko') {
-                    showLogin();
-
-                }
-                var v = document.getElementById('deletethis');
-                v.value = '';
+            }
+            function on_jproReady() {
+                console.log("Login se ha realizado correctamente");
             }
 
-            function on_jproReady()
-            {
-                console.log("jproReady: ready");
-                showLogin();
-                /*
-                 if (jpro.creds.tryStoredSession() == false)
-                 {
-                 showLogin();
-                 }
-                 else
-                 {
-                 hideLogin();
-                 }*/
-            }
-
-            function showLogin()
-            {
-                document.getElementById('login').style.display = 'block';
-                document.getElementById('logged_in').style.display = 'none';
-            }
-
-            function hideLogin()
-            {
-                document.getElementById('login').style.display = 'none';
-                document.getElementById('logged_in').style.display = 'block';
-            }
-            /*************************/
-
-
-
-
-
-            /***** get user's Vehicle list *****/
-            function clearVList()
-            {
-                var vsel = document.getElementById('vselector');
-                vsel.innerHTML = '';
-            }
-
-            function getVList()
-            {
-
-                document.getElementById('vselector_status').innerHTML = 'Loading...';
-
-                clearVList();
-
+            function getLastStoredLocation(id) {
                 try {
-                    jpro.api.Org.getUserVehicles(null, on_getVList_done);
+                    jpro.api.Location.getLast({vid: id, request_type: 0}, on_getStoredLocation_done);
                 }
                 catch (e) {
-                    document.getElementById('vselector_status').innerHTML = 'load error: ' + e;
-                    console.error(e)
-
-                }
-            }
-            function on_getVList_done(success, data)
-            {
-
-                var vsel = document.getElementById('vselector');
-
-
-                if (success == false)
-                {
-                    document.getElementById('vselector_status').innerHTML = 'load error: ' + data;
-                    console.error("getVlist, something went wrong ", data);
-                    return;
-                }
-                console.log(data);
-                document.getElementById('vselector_status').innerHTML = 'loaded';
-
-                var selector = '<option disabled selected value=-1>Select...</option>';
-
-                for (var i in data)
-                {
-                    selector += "<option value=" + data[i].vid + ">";
-
-                    if (data[i].imei == null)
-                        selector += " -- no device -- ";
-                    else
-                        selector += data[i].imei;
-
-                    selector += "&nbsp&nbsp&nbsp" + data[i].name + "&nbsp;&nbsp;(" + data[i].vid + ")";
-
-                    selector += "</option>";
-                }
-                vsel.innerHTML = selector;
-
-
-            }
-            /*************************/
-
-
-
-            /***** drive a vehicle output *****/
-            function setOutput()
-            {
-                document.getElementById('setout_status').innerHTML = 'processing...';
-                var vsel = document.getElementById('vselector');
-                var selected_vid = vsel.options[vsel.selectedIndex].value;
-                if (selected_vid == -1)
-                    return
-
-                var vid = parseInt(selected_vid);
-
-                var ostate = document.getElementById('outstate');
-                var ostate_val = ostate.options[ostate.selectedIndex].value;
-                if (ostate_val == -1)
-                    return
-
-                var state = null;
-                if (ostate_val == 'T')
-                    state = true
-                if (ostate_val == 'F')
-                    state = false
-
-
-                var onumber = document.getElementById('outnumber');
-                var onumber_val = onumber.options[onumber.selectedIndex].value;
-                if (onumber_val == -1)
-                    return
-
-                var onum = parseInt(onumber_val);
-
-                try {
-                    jpro.api.Ios.setOutput({vid: vid, out: onum, state: state}, on_setOutput_done);
-                }
-                catch (e) {
-                    console.error(e)
-                    document.getElementById('setout_status').innerHTML = 'error ' + e;
-
-                }
-            }
-            function on_setOutput_done(success, data)
-            {
-                if (success == false)
-                {
-                    console.error("setOutput, something went wrong ", data);
-                    document.getElementById('setout_status').innerHTML = 'error ' + data;
-                    return;
-                }
-                document.getElementById('setout_status').innerHTML = 'done';
-
-                console.log(data);
-            }
-            /*************************/
-
-
-
-
-
-            /***** get last location of a vehicle *****/
-            function getLastLiveLocation()
-            {
-                var vsel = document.getElementById('vselector');
-                var selected_vid = vsel.options[vsel.selectedIndex].value;
-
-                var vid = parseInt(selected_vid);
-                if (vid == -1)
-                    return;
-                document.getElementById('location_status').innerHTML = 'requesting live position to device...';
-
-                try {
-                    jpro.api.Location.getLast({vid: vid, request_type: 15}, on_getLiveLocation_done)
-                } catch (e) {
-                    console.error(e)
-                    document.getElementById('location_status').innerHTML = 'error ' + e;
+                    console.error(e);
                 }
 
             }
+            function on_getStoredLocation_done(success, data) {
 
-            function getLastStoredLocation()
-            {
-                var vsel = document.getElementById('vselector');
-                var selected_vid = vsel.options[vsel.selectedIndex].value;
-
-                var vid = parseInt(selected_vid);
-                if (vid == -1)
-                    return;
-                document.getElementById('location_status').innerHTML = 'consulting last known position...';
-
-                try
-                {
-                    jpro.api.Location.getLast({vid: vid, request_type: 0}, on_getStoredLocation_done)
-                }
-                catch (e) {
-                    console.error(e)
-                    document.getElementById('location_status').innerHTML = 'error ' + e;
-
-                }
-
-            }
-
-            function on_getLiveLocation_done(success, data)
-            {
-
-                if (success == false)
-                {
+                if (success === false) {
                     console.error("get last location, something went wrong ", data);
-                    document.getElementById('location_status').innerHTML = 'error ' + data;
                     return;
                 }
-
-
-                if (data.live == false)
-                {
-                    var status = "Device didn't respond or is offline. Got last known location. ";
-                }
-                else
-                {
-                    var status = "Got live location. ";
-                }
-
-                document.getElementById('location_status').innerHTML = status;
-                document.getElementById('location_value').innerHTML = parseLocation(data)
-                console.log("Datos de equipo: ");
-                console.log("Conectado: "+data.live)
-                console.log("ac: "+data.location.ac)
-                console.log(data.location)
+                console.log(data.location);
             }
-            function on_getStoredLocation_done(success, data)
-            {
-
-                if (success == false)
-                {
-                    console.error("get last location, something went wrong ", data);
-                    document.getElementById('location_status').innerHTML = 'error ' + data;
-                    return;
+            function reload() {
+                setTimeout(function () {
+                    getLastStoredLocation(791);
+                    reload();
                 }
-
-                var status = 'Got last known location. ';
-
-
-                document.getElementById('location_status').innerHTML = status;
-                document.getElementById('location_value').innerHTML = parseLocation(data)
-                console.log(data)
+                , 10 * 1000);
             }
-            function parseLocation(data)
-            {
-                if (data == null)
-                    return "no location info"
-
-                if (data.location == null)
-                    return "no location info"
-
-                var html = "live: " + data.live;
-                html += "<br>lat:" + data.location.lat + " lon:" + data.location.lon;
-                html += "<br>mph:" + data.location.mph + " head:" + data.location.head + " gpsvalid:" + data.location.gpsvalid;
-                html += "<br>ev code:" + data.location.code + " epoch:" + data.location.epoch;
-
-                html += "<br><br>Location Object:";
-                html += pprint(data.location, 'pprint_obj');
-
-
-
-                return html;
-            }
-            /*************************/
-
-            function pprint(obj, cname)
-            {
-                html = '';
-                if (obj == null)
-                    return "null"
-
-                html += "<table border class='" + cname + "' >"
-                for (var i in obj)
-                {
-                    if (typeof (obj[i]) == typeof (new Object()))
-                    {
-                        html += "<tr><td><b>" + i + "</b></td><td>" + pprint(obj[i], cname) + "</td></tr>";
-                    }
-                    else
-                    {
-
-                        html += "<tr><td><b>" + i + "</b></td><td>" + obj[i] + "</td></tr>";
-                    }
-                }
-                html += "</table>"
-                return html;
-            }
-
-
-            /***** Photo cam methods *****/
-            //jpro.api.PhotoCam.getLastPhoto({vid:12}, function (s,d){console.log(s,d)})
-            //jpro.api.PhotoCam.getPhotoById({'event_id':12861040}, function (s,d){console.log(s,d)})
-            //jpro.api.PhotoCam.capturePhoto({vid:12}, function (s,d){console.log(s,d)})
-
-
-            /*************************/
-
-
         </script>
     </head>
-
-    <body style='font-family:Verdana;font-size:0.8em' onload='init()'>
-        <div style='width:100%;text-align:center'>
-            <h2>JProxy (JSON Proxy) HTML-JS Demo Application</h2>
-            Using services from:<br> <span style='color:blue' id='jpro_url'></span>
-            <br>
-            Using Application ID: <span style='color:red' id='jpro_appid'></span>
-        </div>
-        <div style='width:100%;text-align:center'>
-            <div style='display:inline'>auth state</div>:<div id='auth_state' style='display:inline'></div>
-        </div>
-        <br>
-        <form onsubmit='javascript:return false' autocomplete='off'>
-            <table  class='panel2' id='login'  style='display:none' width=100%>
-
-                <tr>
-                    <td width=50% valign=bottom align=right> user:</td><td valign=bottom  align=left> <input size=40 name='uname' type='text' value="hugo.ramirez@kradac.com" /></td>
-                </tr>
-                <tr>
-                    <td valign=top  align=right> pass:</td><td valign=top  align=left> <input size=40 name='pword' type='password' id='deletethis' value="kradacloja" />
-                        <!-- div style='font-size:0.7em'>Remember<input type='checkbox' name='storeit' checked />
-                        </div -->
-                        <br>
-                        <button class='apib' onclick='login(this.form)'>&nbsp;&nbsp;&nbsp;Login&nbsp;&nbsp;&nbsp;</button>
-                    </td>
-                </tr>
-            </table>
-        </form>
-
-        <div  id='logged_in' style='display:none;width:100%;text-align:center'>
-            <div >
-                <button style='font-size:0.7em' onclick='showLogin()'>go to login</button>
-                <button style='font-size:0.7em' onclick='logout()'>logout</button>
-            </div>
-            <br>
-
-            <div id='devices'>
-                <div class='panel2' >
-                    <b>jpro.api.Org.getUserVehicles()</b>
-                    <br><br>
-                    <button class='apib' onclick='getVList()'>Load vehicle's list &rarr;</button>
-
-                    <select id='vselector' ></select>
-                    <span class='status' id='vselector_status'></span>
-
-                </div>
-                <br>
-                <div id='dios' class='panel2'>
-                    <b>jpro.api.Ios.setOutput()</b>
-                    <br><br>
-                    Set output
-                    <select id='outnumber'>
-                        <option selected value=1>1</option>
-                        <option value=2>2</option>
-                    </select>
-                    &rarr;
-                    <select id='outstate'>
-                        <option selected value='F'>Inactive</option>
-                        <option value='T'>Active</option>
-                    </select>
-                    <button class='apib' onclick='setOutput()' title=''>Proceed</button>
-                    <span class='status' id='setout_status'></span>
-
-                </div>
-                <br>
-                <div id='dlocation' class='panel2'>
-                    <b>jpro.api.Location.getLast()</b>
-                    <br><br>
-                    Get last location:
-
-                    <button class='apib' onclick='getLastLiveLocation()' >Request live location</button>
-                    or
-                    <button class='apib' onclick='getLastStoredLocation()' >Get last known location</button>
-                    <div class='status' id='location_status'></div>
-                    <div  id='location_value' class='value' style='font-size:1.2em'></div>
-
-
-                </div>
-
-
-
-            </div>
-
-            <div id='docs'>
-
-            </div>
-
-        </div>
-
+    <body onload='init()'>
     </body>
-
-
 </html>
 
 
