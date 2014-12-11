@@ -2,6 +2,7 @@
 var jpro = {
     
     url : "https://pegasus1.pegasusgateway.com/jproxy/",
+    //url : "https://pegasus1.pegasusgateway.com/dajaxice/src.apps.reversegeo.resolve/",
     
     debug : false,
     debug_div : null,

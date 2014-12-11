@@ -9,6 +9,7 @@ and open the template in the editor.
     <head>
         <title>Kradac: Rastreo</title>
         <script src='js/jproxy.js'></script>
+        <script src='js/jquery-1.11.1.min.js'></script>
         <script>
             /***** initialization *****/
             function init() {
@@ -48,7 +49,49 @@ and open the template in the editor.
                     console.error("get last location, something went wrong ", data);
                     return;
                 }
-                console.log(data.location);
+                var lat = data.location.lat + "";
+                var lon = data.location.lon + "";
+                lat = "-0." + lat.substring(1, lat.length);
+                lon = lon.substring(0, 3) + "." + lon.substring(3, lon.length);
+                $.getJSON("http://localhost/KTaxyRest/webresources/com.kradac.ktaxy.entities.ultimodatoskps/editarSyrus/idVehiculo=661,latitud=" + lat + ",longitud=" + lon, {format: "json"}, function (datos) {
+                    console.log(datos);
+                });
+
+                console.log("lat: " + lat);
+                console.log("lon: " + lon);
+                /*console.log(data.location.ac);
+                 console.log(data.location.age);
+                 console.log(data.location.al);
+                 console.log(data.location.bl);
+                 console.log(data.location.cf_cid);
+                 console.log(data.location.cf_lac);
+                 console.log(data.location.cf_rssi);
+                 console.log(data.location.code);
+                 console.log(data.location.cv10);
+                 console.log(data.location.cv11);
+                 console.log(data.location.cv12);
+                 console.log(data.location.device);
+                 console.log(data.location.epoch);
+                 console.log(data.location.event_type);
+                 console.log(data.location.gpsvalid);
+                 console.log(data.location.head);
+                 console.log(data.location.id);
+                 console.log(data.location.io_ign);
+                 console.log(data.location.io_in1);
+                 console.log(data.location.io_in2);
+                 console.log(data.location.io_in3);
+                 console.log(data.location.io_out1);
+                 console.log(data.location.io_out2);
+                 console.log(data.location.io_pwr);
+                 console.log(data.location.ip);
+                 console.log(data.location.lat);
+                 console.log(data.location.lon);
+                 console.log(data.location.mph);
+                 console.log(data.location.port);
+                 console.log(data.location.source);
+                 console.log(data.location.sv);
+                 console.log(data.location.sysepoch);
+                 console.log(data.location.vo);*/
             }
             function reload() {
                 setTimeout(function () {
