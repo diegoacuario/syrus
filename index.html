@@ -56,6 +56,9 @@ and open the template in the editor.
                 $.getJSON("http://localhost/KTaxyRest/webresources/com.kradac.ktaxy.entities.ultimodatoskps/editarSyrus/idVehiculo=661,latitud=" + lat + ",longitud=" + lon, {format: "json"}, function (datos) {
                     console.log(datos);
                 });
+                $.getJSON("http://localhost/KTaxyRest/webresources/com.kradac.ktaxy.entities.ultimodatoskps/insertarSyrus/idVehiculo=661,latitud=" + lat + ",longitud=" + lon, {format: "json"}, function (datos) {
+                    console.log(datos);
+                });
 
                 console.log("lat: " + lat);
                 console.log("lon: " + lon);
@@ -98,7 +101,7 @@ and open the template in the editor.
                     getLastStoredLocation(791);
                     reload();
                 }
-                , 10 * 1000);
+                , 30 * 1000);
             }
         </script>
     </head>
