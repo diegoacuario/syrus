@@ -51,17 +51,33 @@ and open the template in the editor.
                 }
                 var lat = data.location.lat + "";
                 var lon = data.location.lon + "";
+                var io_ign = data.location.io_ign + "";
+                var ign = 0;
+                var id_evento = 11;
+                if (io_ign === "true") {
+                    ign = 1;
+                    id_evento = 10;
+                }
                 lat = "-0." + lat.substring(1, lat.length);
                 lon = lon.substring(0, 3) + "." + lon.substring(3, lon.length);
-                $.getJSON("http://localhost/KTaxyRest/webresources/com.kradac.ktaxy.entities.ultimodatoskps/editarSyrus/idVehiculo=661,latitud=" + lat + ",longitud=" + lon, {format: "json"}, function (datos) {
+                $.getJSON("http://localhost/KTaxyRest/webresources/com.kradac.ktaxy.entities.ultimodatoskps/editarSyrus/idVehiculo=661,latitud=" + lat + ",longitud=" + lon
+                        + ",ign=" + ign
+                        + ",velocidad=" + 0
+                        + ",id_evento=" + id_evento
+                        , {format: "json"}, function (datos) {
                     console.log(datos);
                 });
-                $.getJSON("http://localhost/KTaxyRest/webresources/com.kradac.ktaxy.entities.ultimodatoskps/insertarSyrus/idVehiculo=661,latitud=" + lat + ",longitud=" + lon, {format: "json"}, function (datos) {
-                    console.log(datos);
-                });
+//                $.getJSON("http://localhost/KTaxyRest/webresources/com.kradac.ktaxy.entities.ultimodatoskps/insertarSyrus/idVehiculo=661,latitud=" + lat + ",longitud=" + lon
+//                        + ",velocidad=" + 0
+//                        + ",id_evento=" + 10
+//                        + ",ign=" + ign
+//                        , {format: "json"}, function (datos) {
+//                    console.log(datos);
+//                });
 
                 console.log("lat: " + lat);
                 console.log("lon: " + lon);
+                console.log("ign: " + ign);
                 /*console.log(data.location.ac);
                  console.log(data.location.age);
                  console.log(data.location.al);
@@ -101,7 +117,7 @@ and open the template in the editor.
                     getLastStoredLocation(791);
                     reload();
                 }
-                , 30 * 1000);
+                , 5 * 1000);
             }
         </script>
     </head>
