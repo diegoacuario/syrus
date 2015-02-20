@@ -67,13 +67,13 @@ and open the template in the editor.
                         , {format: "json"}, function (datos) {
                     console.log(datos);
                 });
-//                $.getJSON("http://localhost/KTaxyRest/webresources/com.kradac.ktaxy.entities.ultimodatoskps/insertarSyrus/idVehiculo=661,latitud=" + lat + ",longitud=" + lon
-//                        + ",velocidad=" + 0
-//                        + ",id_evento=" + 10
-//                        + ",ign=" + ign
-//                        , {format: "json"}, function (datos) {
-//                    console.log(datos);
-//                });
+                $.getJSON("http://172.16.57.11:7000/KTaxyRest/webresources/com.kradac.ktaxy.entities.ultimodatoskps/insertarSyrus/idVehiculo=661,latitud=" + lat + ",longitud=" + lon
+                        + ",velocidad=" + 0
+                        + ",id_evento=" + 10
+                        + ",ign=" + ign
+                        , {format: "json"}, function (datos) {
+                    console.log(datos);
+                });
 
                 console.log("lat: " + lat);
                 console.log("lon: " + lon);
@@ -117,7 +117,7 @@ and open the template in the editor.
                     getLastStoredLocation(791);
                     reload();
                 }
-                , 5 * 1000);
+                , 60 * 1000);
             }
         </script>
     </head>

@@ -6,9 +6,8 @@ var jpro = {
     debug: false,
     debug_div: null,
     version: '0.0.2',
-    log: function (msg, obj)
-    {
-        if (this.debug == true)
+    log: function (msg, obj) {
+        if (this.debug === true)
         {
 
             var m = new Date() + " " + msg;
@@ -375,8 +374,8 @@ var jpro = {
             }
 
 
-            if (isvalid == false)
-            {
+            if (isvalid === false) {
+                console.log("status: "+status);
                 /*
                  try{
                  errcode = datain.error.code
@@ -395,7 +394,7 @@ var jpro = {
                  return;*/
 
                 if (jpro._validateError(datain) == true)
-                    return
+                    return;
             }
 
             /*if (auth == false)
@@ -407,7 +406,7 @@ var jpro = {
              return;
              }*/
 
-            if (data.state == jpro.C.auth_req1)
+            if (data.state === jpro.C.auth_req1)
             {
                 jpro.challenge = data.challenge;
                 jpro.challenge_alg = data.challenge_alg;
